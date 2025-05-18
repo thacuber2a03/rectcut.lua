@@ -9,7 +9,7 @@ local min, max = math.min, math.max
 ---@field public maxY number
 ---@overload fun(minX: number, minY: number, maxX: number, maxY: number): Rect
 ---@overload fun(r: {minX: number, minY: number, maxX: number, maxY: number}): Rect
-local Rect = {}
+local Rect = { _version = "1.0" }
 Rect.__index = Rect
 
 ---Creates a new Rect. Equivalent to calling the class: `Rect(...)`.
@@ -68,6 +68,16 @@ function Rect:xywh()
         self.minY + (self.maxY - self.minY)
 end
 
+---A variant of the `get_*` methods that takes in the side to get from.
+---@param side "left"|"right"|"top"|"bottom"
+---@param a number
+---@return Rect
+function Rect:get(side, a)
+    local f = self["get_" .. side]
+    assert(f, "no such side: " .. side)
+    return f(self, a)
+end
+
 ---Same as `cut_left`, except it keeps the Rect intact.
 ---@param a number
 ---@return Rect
@@ -106,6 +116,16 @@ function Rect:get_bottom(a)
         self.minX, max(self.minY, self.maxY - a),
         self.maxX, self.maxY
     )
+end
+
+---A variant of the `cut_*` methods that takes in the side to cut from.
+---@param side "left"|"right"|"top"|"bottom"
+---@param a number
+---@return Rect
+function Rect:cut(side, a)
+    local f = self["cut_" .. side]
+    assert(f, "no such side: " .. side)
+    return f(self, a)
 end
 
 ---Cuts `a` from the left side of the Rect, and returns the cut part.
@@ -163,6 +183,16 @@ function Rect:add_top(a) return Rect.new(self.minX, self.minY - a, self.maxX, se
 ---@param a number
 ---@return Rect
 function Rect:add_bottom(a) return Rect.new(self.minX, self.minY, self.maxX, self.maxY + a) end
+
+---A variant of the `add_*` methods that takes in the side to add from.
+---@param side "left"|"right"|"top"|"bottom"
+---@param a number
+---@return Rect
+function Rect:add(side, a)
+    local f = self["add_" .. side]
+    assert(f, "no such side: " .. side)
+    return f(self, a)
+end
 
 ---Returns an extended version of this Rect.
 ---@param a number
