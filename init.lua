@@ -56,6 +56,10 @@ end
 ---@return number minX, number minY, number maxX, number maxY
 function Rect:unpack() return self.minX, self.minY, self.maxX, self.maxY end
 
+---Returns a copy of this Rect.
+---@return Rect
+function Rect:copy() return Rect.new(self:unpack()) end
+
 ---Returns the components of this Rect, in XYWH format.
 ---@return number x, number y, number width, number height
 function Rect:xywh()
