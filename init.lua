@@ -74,7 +74,7 @@ end
 ---@return Rect
 function Rect:get(side, a)
     local f = self["get_" .. side]
-    assert(f, "no such side: " .. side)
+    assert(f, "rectcut: no such side '" .. side .. "'")
     return f(self, a)
 end
 
@@ -88,6 +88,12 @@ function Rect:get_left(a)
     )
 end
 
+---Alias for `get_left`.
+---@param a number
+---@return Rect
+---@see Rect.get_left
+function Rect:getLeft(a) return Rect:get_left(a) end
+
 ---Same as `cut_right`, expect it keeps the Rect intact.
 ---@param a number
 ---@return Rect
@@ -97,6 +103,12 @@ function Rect:get_right(a)
         self.maxX, self.maxY
     )
 end
+
+---Alias for `get_right`.
+---@param a number
+---@return Rect
+---@see Rect.get_right
+function Rect:getRight(a) return Rect:get_right(a) end
 
 ---Same as `cut_top`, expect it keeps the Rect intact.
 ---@param a number
@@ -108,6 +120,12 @@ function Rect:get_top(a)
     )
 end
 
+---Alias for `get_top`.
+---@param a number
+---@return Rect
+---@see Rect.get_top
+function Rect:getTop(a) return Rect:get_top(a) end
+
 ---Same as `cut_bottom`, expect it keeps the Rect intact.
 ---@param a number
 ---@return Rect
@@ -118,13 +136,19 @@ function Rect:get_bottom(a)
     )
 end
 
+---Alias for `get_bottom`.
+---@param a number
+---@return Rect
+---@see Rect.get_bottom
+function Rect:getBottom(a) return Rect:get_bottom(a) end
+
 ---A variant of the `cut_*` methods that takes in the side to cut from.
 ---@param side "left"|"right"|"top"|"bottom"
 ---@param a number
 ---@return Rect
 function Rect:cut(side, a)
     local f = self["cut_" .. side]
-    assert(f, "no such side: " .. side)
+    assert(f, "rectcut: no such side '" .. side .. "'")
     return f(self, a)
 end
 
@@ -137,6 +161,12 @@ function Rect:cut_left(a)
     return left
 end
 
+---Alias for `cut_left`.
+---@param a number
+---@return Rect
+---@see Rect.cut_left
+function Rect:cutLeft(a) return Rect:cut_left(a) end
+
 ---Cuts `a` from the right side of the Rect, and returns the cut part.
 ---@param a number
 ---@return Rect
@@ -145,6 +175,12 @@ function Rect:cut_right(a)
     self.maxX = right.maxX
     return right
 end
+
+---Alias for `cut_right`.
+---@param a number
+---@return Rect
+---@see Rect.cut_right
+function Rect:cutRight(a) return Rect:cut_right(a) end
 
 ---Cuts `a` from the top side of the Rect, and returns the cut part.
 ---@param a number
@@ -155,6 +191,12 @@ function Rect:cut_top(a)
     return top
 end
 
+---Alias for `cut_top`.
+---@param a number
+---@return Rect
+---@see Rect.cut_top
+function Rect:cutTop(a) return Rect:cut_top(a) end
+
 ---Cuts `a` from the bottom side of the Rect, and returns the cut part.
 ---@param a number
 ---@return Rect
@@ -164,25 +206,55 @@ function Rect:cut_bottom(a)
     return bottom
 end
 
+---Alias for `cut_bottom`.
+---@param a number
+---@return Rect
+---@see Rect.cut_bottom
+function Rect:cutBottom(a) return Rect:cut_bottom(a) end
+
 ---Returns this rect, with `a` added to its left side.
 ---@param a number
 ---@return Rect
 function Rect:add_left(a) return Rect.new(self.minX - a, self.minY, self.maxX, self.maxY) end
+
+---Alias for `add_left`.
+---@param a number
+---@return Rect
+---@see Rect.add_left
+function Rect:addLeft(a) return Rect:add_left(a) end
 
 ---Returns this rect, with `a` added to its right side.
 ---@param a number
 ---@return Rect
 function Rect:add_right(a) return Rect.new(self.minX, self.minY, self.maxX + a, self.maxY) end
 
+---Alias for `add_right`.
+---@param a number
+---@return Rect
+---@see Rect.add_right
+function Rect:addRight(a) return Rect:add_right(a) end
+
 ---Returns this rect, with `a` added to its top side.
 ---@param a number
 ---@return Rect
 function Rect:add_top(a) return Rect.new(self.minX, self.minY - a, self.maxX, self.maxY) end
 
+---Alias for `add_top`.
+---@param a number
+---@return Rect
+---@see Rect.add_top
+function Rect:addTop(a) return Rect:add_top(a) end
+
 ---Returns this rect, with `a` added to its bottom side.
 ---@param a number
 ---@return Rect
 function Rect:add_bottom(a) return Rect.new(self.minX, self.minY, self.maxX, self.maxY + a) end
+
+---Alias for `add_bottom`.
+---@param a number
+---@return Rect
+---@see Rect.add_bottom
+function Rect:addBottom(a) return Rect:add_bottom(a) end
 
 ---A variant of the `add_*` methods that takes in the side to add from.
 ---@param side "left"|"right"|"top"|"bottom"
@@ -190,7 +262,7 @@ function Rect:add_bottom(a) return Rect.new(self.minX, self.minY, self.maxX, sel
 ---@return Rect
 function Rect:add(side, a)
     local f = self["add_" .. side]
-    assert(f, "no such side: " .. side)
+    assert(f, "rectcut: no such side '" .. side .. "'")
     return f(self, a)
 end
 
