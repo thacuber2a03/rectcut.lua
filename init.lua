@@ -9,7 +9,7 @@ local min, max = math.min, math.max
 ---@field public maxY number
 ---@overload fun(minX: number, minY: number, maxX: number, maxY: number): Rect
 ---@overload fun(r: {minX: number, minY: number, maxX: number, maxY: number}): Rect
-local Rect = { _version = "1.0" }
+local Rect = { _version = "2.0" }
 Rect.__index = Rect
 
 ---Creates a new Rect. Equivalent to calling the class: `Rect(...)`.
@@ -29,7 +29,7 @@ function Rect.new(minX, minY, maxX, maxY)
         minY = minY,
         maxX = maxX,
         maxY = maxY,
-    }, Rect)
+    }, Rect --[[@as table]])
 end
 
 ---Creates a new Rect from XYWH parameters.
@@ -49,7 +49,7 @@ function Rect.fromXYWH(x, y, width, height)
         minY = y,
         maxX = x + width,
         maxY = y + height,
-    }, Rect)
+    }, Rect --[[@as table]])
 end
 
 ---Returns all components of this Rect.
@@ -157,7 +157,7 @@ end
 ---@return Rect
 function Rect:cut_left(a)
     local left = self:get_left(a)
-    self.minX = left.minX
+    self.minX = left.maxX
     return left
 end
 
@@ -172,7 +172,7 @@ function Rect:cutLeft(a) return Rect:cut_left(a) end
 ---@return Rect
 function Rect:cut_right(a)
     local right = self:get_right(a)
-    self.maxX = right.maxX
+    self.maxX = right.minX
     return right
 end
 
@@ -187,7 +187,7 @@ function Rect:cutRight(a) return Rect:cut_right(a) end
 ---@return Rect
 function Rect:cut_top(a)
     local top = self:get_top(a)
-    self.minY = top.minY
+    self.minY = top.maxY
     return top
 end
 
@@ -202,7 +202,7 @@ function Rect:cutTop(a) return Rect:cut_top(a) end
 ---@return Rect
 function Rect:cut_bottom(a)
     local bottom = self:get_bottom(a)
-    self.maxY = bottom.maxY
+    self.maxY = bottom.minY
     return bottom
 end
 
@@ -212,7 +212,7 @@ end
 ---@see Rect.cut_bottom
 function Rect:cutBottom(a) return Rect:cut_bottom(a) end
 
----Returns this rect, with `a` added to its left side.
+---Returns a copy of this rect, with `a` added to its left side.
 ---@param a number
 ---@return Rect
 function Rect:add_left(a) return Rect.new(self.minX - a, self.minY, self.maxX, self.maxY) end
@@ -223,7 +223,7 @@ function Rect:add_left(a) return Rect.new(self.minX - a, self.minY, self.maxX, s
 ---@see Rect.add_left
 function Rect:addLeft(a) return Rect:add_left(a) end
 
----Returns this rect, with `a` added to its right side.
+---Returns a copy of this rect, with `a` added to its right side.
 ---@param a number
 ---@return Rect
 function Rect:add_right(a) return Rect.new(self.minX, self.minY, self.maxX + a, self.maxY) end
@@ -234,7 +234,7 @@ function Rect:add_right(a) return Rect.new(self.minX, self.minY, self.maxX + a, 
 ---@see Rect.add_right
 function Rect:addRight(a) return Rect:add_right(a) end
 
----Returns this rect, with `a` added to its top side.
+---Returns a copy of this rect, with `a` added to its top side.
 ---@param a number
 ---@return Rect
 function Rect:add_top(a) return Rect.new(self.minX, self.minY - a, self.maxX, self.maxY) end
@@ -245,7 +245,7 @@ function Rect:add_top(a) return Rect.new(self.minX, self.minY - a, self.maxX, se
 ---@see Rect.add_top
 function Rect:addTop(a) return Rect:add_top(a) end
 
----Returns this rect, with `a` added to its bottom side.
+---Returns a copy of this rect, with `a` added to its bottom side.
 ---@param a number
 ---@return Rect
 function Rect:add_bottom(a) return Rect.new(self.minX, self.minY, self.maxX, self.maxY + a) end
@@ -278,9 +278,9 @@ function Rect:contract(a) return Rect.new(self.minX + a, self.minY + a, self.max
 
 ---@return string
 function Rect:__tostring()
-    return string.format("Rect: X(%f-%f), Y(%f-%f)", self:unpack())
+    return string.format("Rect: min(%g,%g), max(%g,%g)", self:unpack())
 end
 
-return setmetatable(Rect, {
+return setmetatable(Rect --[[@as table]], {
     __call = function(cls, ...) return cls.new(...) end,
-})
+}) --[[@as Rect]]
